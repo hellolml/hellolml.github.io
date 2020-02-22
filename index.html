@@ -152,7 +152,7 @@
   </li>
         <li class="menu-item menu-item-archives">
 
-    <a href="/archives/" rel="section"><i class="fa fa-fw fa-archive"></i>Archives<span class="badge">7</span></a>
+    <a href="/archives/" rel="section"><i class="fa fa-fw fa-archive"></i>Archives<span class="badge">8</span></a>
 
   </li>
   </ul>
@@ -177,6 +177,124 @@
             
 
   <div class="posts-expand">
+        
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block home" lang="en">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2020/02/22/%E5%B9%B3%E8%A1%A1%E4%BA%8C%E5%8F%89%E6%A0%91-AVL/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="LMliao">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="welcome mingliao blog!">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          
+            <a href="/2020/02/22/%E5%B9%B3%E8%A1%A1%E4%BA%8C%E5%8F%89%E6%A0%91-AVL/" class="post-title-link" itemprop="url">平衡二叉树(AVL)</a>
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              <span class="post-meta-item-text">Posted on</span>
+              
+
+              <time title="Created: 2020-02-22 17:44:18 / Modified: 17:45:14" itemprop="dateCreated datePublished" datetime="2020-02-22T17:44:18+08:00">2020-02-22</time>
+            </span>
+
+          <br>
+            <span class="post-meta-item" title="Symbols count in article">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-file-word-o"></i>
+              </span>
+                <span class="post-meta-item-text">Symbols count in article: </span>
+              <span>4.2k</span>
+            </span>
+            <span class="post-meta-item" title="Reading time">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-clock-o"></i>
+              </span>
+                <span class="post-meta-item-text">Reading time &asymp;</span>
+              <span>4 mins.</span>
+            </span>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <p>@[toc]</p>
+<h2 id="AVL"><a href="#AVL" class="headerlink" title="AVL"></a>AVL</h2><h4 id="平衡二叉树的概念"><a href="#平衡二叉树的概念" class="headerlink" title="平衡二叉树的概念"></a>平衡二叉树的概念</h4><p><strong>平衡二叉树(Self-Balancing Binary Search Tree 或 Height-Balanced Binary Search Tree),是一种二叉排序树,其中每一个节点的左子树和右子树的高度差至多等于1.</strong><br>二叉排序树虽可以缩短查找的效率，但如果==数据有序或接近有序二叉搜索树将退化为单支树，查找元素相当于在顺序表中搜索元素，效率低下==。因此，两位俄罗斯的数学家G.M.Adelson-Velskii和E.M.Landis在1962年 发明了一种解决上述问题的方法：<strong>当向二叉搜索树中插入新结点后，如果能保证每个结点的左右子树高度之差的绝对值不超过1(需要对树中的结点进行调整)，即可降低树的高度，从而减少平均搜索长度</strong>。<br>一棵AVL树或者是空树，或者是具有以下性质的二叉搜索树：</p>
+<ul>
+<li><strong>它的左右子树都是AVL树</strong> </li>
+<li><strong>左右子树高度之差(简称平衡因子BF)的绝对值不超过1(-1/0/1)</strong><br><img src="https://img-blog.csdnimg.cn/20200222153609617.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L2xfMjU4MTE1NDE3Ng==,size_16,color_FFFFFF,t_70" alt="在这里插入图片描述"><br><strong>如果一棵二叉搜索树是高度平衡的，它就是AVL树。如果它有n个结点，其高度可保持在$O(log_2 n)$，搜索时间复杂度O($log_2 n$)。</strong><h4 id="AVL树的实现原理"><a href="#AVL树的实现原理" class="headerlink" title="AVL树的实现原理"></a>AVL树的实现原理</h4><strong>平衡二叉树构建的基本思想就是在构建二叉排序过程中,每当插入一个结点时,先检查是否因插入而破坏,若是,则找出最小不平衡子树.在保持二叉排序树的前提下,调整最小不平衡子树.在保持二叉排序树的前提下,调整最小不平衡子树中各结点之间的链接关系,进行相应的旋转,使之形成新的平衡子树.</strong><h4 id="AVL树节点的定义"><a href="#AVL树节点的定义" class="headerlink" title="AVL树节点的定义"></a>AVL树节点的定义</h4>为了AVL树实现简单，AVL树节点在定义时维护一个平衡因子，具体节点定义如下：<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">AVLTreeNode</span></span></span><br><span class="line"><span class="class"></span>&#123;</span><br><span class="line">  <span class="function"><span class="keyword">public</span> <span class="title">AVLTreeNode</span><span class="params">(<span class="keyword">int</span> val)</span></span></span><br><span class="line"><span class="function"> </span>&#123;</span><br><span class="line">    <span class="keyword">this</span>.val = val;</span><br><span class="line"> &#125;</span><br><span class="line">  <span class="keyword">public</span> AVLTreeNode left = <span class="keyword">null</span>;   <span class="comment">// 节点的左孩子</span></span><br><span class="line">  <span class="keyword">public</span> AVLTreeNode right = <span class="keyword">null</span>;  <span class="comment">// 节点的右孩子</span></span><br><span class="line">  <span class="keyword">public</span> AVLTreeNode parent = <span class="keyword">null</span>;  <span class="comment">// 节点的双亲</span></span><br><span class="line">  <span class="keyword">public</span> <span class="keyword">int</span> val = <span class="number">0</span>;</span><br><span class="line">  <span class="keyword">public</span> <span class="keyword">int</span> bf = <span class="number">0</span>;  <span class="comment">// 当前节点的平衡因子</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h4 id="AVL树的插入"><a href="#AVL树的插入" class="headerlink" title="AVL树的插入"></a>AVL树的插入</h4>AVL树就是在二叉搜索树的基础上引入了平衡因子，因此AVL树也可以看成是二叉搜索树。那么AVL树的插入过程可以分为两步：<ol>
+<li>按照二叉搜索树的方式插入新节点</li>
+<li>调整节点的平衡因子</li>
+</ol>
+</li>
+</ul>
+<p><strong>实现</strong></p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">boolean</span> <span class="title">insert</span><span class="params">(<span class="keyword">int</span> val)</span></span>&#123;</span><br><span class="line">  <span class="comment">/* 1. 先按照二叉搜索树的规则将节点插入到AVL树中</span></span><br><span class="line"><span class="comment"> 1. 新节点插入后，AVL树的平衡性可能会遭到破坏，此时就需要更新平衡因子，并检测是否破坏了AVL树的平衡性</span></span><br><span class="line"><span class="comment">pCur插入后，pParent的平衡因子一定需要调整，在插入之前，pParent</span></span><br><span class="line"><span class="comment">的平衡因子分为三种情况：-1，0, 1, 分以下两种情况：</span></span><br><span class="line"><span class="comment"> 2. 如果pCur插入到pParent的左侧，只需给pParent的平衡因子-1即可</span></span><br><span class="line"><span class="comment"> 3. 如果pCur插入到pParent的右侧，只需给pParent的平衡因子+1即可</span></span><br><span class="line"><span class="comment">此时：pParent的平衡因子可能有三种情况：0，正负1， 正负2</span></span><br><span class="line"><span class="comment"> 4. 如果pParent的平衡因子为0，说明插入之前pParent的平衡因子为正负1，插入后被调整成0，此时满足AVL树的性质，插入成功</span></span><br><span class="line"><span class="comment"> 5. 如果pParent的平衡因子为正负1，说明插入前pParent的平衡因子一定为0，插入后被更新成正负1，此时以pParent为根的树的高度增加，需要继续向上更新</span></span><br><span class="line"><span class="comment"> 6. 如果pParent的平衡因子为正负2，则pParent的平衡因子违反平衡树的性质，需要对其进行旋转处理</span></span><br><span class="line"><span class="comment">  */</span></span><br><span class="line">    <span class="comment">// cur插入后，parent的平衡因子一定遭到破坏，必须对parent的平衡因子进行调整</span></span><br><span class="line">    <span class="keyword">while</span>(<span class="keyword">null</span> != parent)&#123;</span><br><span class="line">     </span><br><span class="line">      <span class="comment">// 更新双亲节点的平衡因子</span></span><br><span class="line">      <span class="keyword">if</span>(cur == parent.left)</span><br><span class="line">        parent.bf--;</span><br><span class="line">      <span class="keyword">else</span></span><br><span class="line">        parent.bf++;</span><br><span class="line">      <span class="keyword">if</span>(parent.bf == <span class="number">0</span>)</span><br><span class="line">        <span class="keyword">break</span>;</span><br><span class="line">      <span class="keyword">else</span> <span class="keyword">if</span>(parent.bf == -<span class="number">1</span> || parent.bf == <span class="number">1</span>) &#123;</span><br><span class="line">        cur = parent;</span><br><span class="line">        parent = cur.parent;</span><br><span class="line">     &#125;</span><br><span class="line">      <span class="keyword">else</span> &#123;</span><br><span class="line">        <span class="comment">// parent节点的平衡因子为2，违反了AVL树的性质</span></span><br><span class="line">        <span class="comment">// 此时需要对以parent为根的二叉树进行旋转处理</span></span><br><span class="line">        <span class="keyword">if</span>(<span class="number">2</span> == parent.bf) &#123;</span><br><span class="line">          <span class="comment">// parent的平衡因子为2，说明parent的右子树比较高，最终需要左旋</span></span><br><span class="line">          <span class="comment">// ......</span></span><br><span class="line">       &#125;</span><br><span class="line">        <span class="keyword">else</span>&#123;</span><br><span class="line">          <span class="comment">// parent的平衡因子为-2，说明parent的左子树比较高，最终需要右旋</span></span><br><span class="line">          <span class="comment">// ......</span></span><br><span class="line">       &#125;</span><br><span class="line">        <span class="comment">// 旋转完成之后，以parent为根的树已经和插入之前的高度相同，不会再对上层树的平衡性造成影响</span></span><br><span class="line">        <span class="keyword">break</span>;</span><br><span class="line">     &#125;</span><br><span class="line">   &#125;</span><br><span class="line">    <span class="keyword">return</span> <span class="keyword">true</span>;</span><br><span class="line"> &#125;</span><br></pre></td></tr></table></figure>
+<h4 id="AVL树的旋转"><a href="#AVL树的旋转" class="headerlink" title="AVL树的旋转"></a>AVL树的旋转</h4><p>如果在一棵原本是平衡的AVL树中插入一个新节点，可能造成不平衡，此时必须调整树的结构，使之平衡化。根据节点插入位置的不同，AVL树的旋转分为四种：</p>
+<ol>
+<li><strong>新节点插入较高左子树的左侧—左左：右单旋</strong><br><img src="https://img-blog.csdnimg.cn/2020022216543234.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L2xfMjU4MTE1NDE3Ng==,size_16,color_FFFFFF,t_70" alt="在这里插入图片描述"><ul>
+<li>上图在插入前，AVL树是平衡的，新节点插入到30的左子树(注意：此处不是左孩子)中，30左子树增加了一层，导致以60为根的二叉树不平衡，要让60平衡，只能将60左子树的高度减少一层，右子树增加一层，即将左子树往上提，这样60转下来，因为60比30大，只能将其放在30的右子树，而如果30有右子树，右子树根的值一定大于30，小于60，只能将其放在60的左子树，旋转完成后，更新节点的平衡因子即可。在旋转过程中，有以下几种情况需要考虑：</li>
+<li>30节点的右孩子可能存在，也可能不存在</li>
+<li>60可能是根节点，也可能是子树<br>如果是根节点，旋转完成后，要更新根节点<br>如果是子树，可能是某个节点的左子树，也可能是右子树<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 左单旋</span></span><br><span class="line"><span class="function"><span class="keyword">private</span> <span class="keyword">void</span> <span class="title">rotateLeft</span><span class="params">(AVLTreeNode parent)</span></span>&#123;</span><br><span class="line">  <span class="comment">// 注意这几个特殊孩子节点的命名</span></span><br><span class="line">  <span class="comment">// subR为双亲的右孩子</span></span><br><span class="line">  AVLTreeNode subR = parent.right;</span><br><span class="line"> </span><br><span class="line">  <span class="comment">// 为subR的左孩子</span></span><br><span class="line">  AVLTreeNode subRL = subR.left;</span><br><span class="line">  <span class="comment">// 节点的孩子域的指向只需要改变两个：结合图解</span></span><br><span class="line">  <span class="comment">// 1. 旋转完成后subRL成为parent的右孩子</span></span><br><span class="line">  parent.right = subRL;</span><br><span class="line">  <span class="keyword">if</span>(<span class="keyword">null</span> != subRL)</span><br><span class="line">    subRL.parent = parent;</span><br><span class="line">  <span class="comment">// 2. 旋转完成之后，parent成为subR的左孩子</span></span><br><span class="line">  subR.left = parent;</span><br><span class="line"> </span><br><span class="line">  <span class="comment">// 更新parent和subR的双亲</span></span><br><span class="line">  AVLTreeNode pparent = parent.parent;</span><br><span class="line">  parent.parent = subR;</span><br><span class="line">  subR.parent = pparent;</span><br><span class="line">  <span class="comment">// 更新原parent的上层</span></span><br><span class="line">  <span class="comment">// 1. 旋转前，parent可能是根节点</span></span><br><span class="line">  <span class="comment">// 2. 旋转前，parent可能是一棵子树，既然是子树，那parent可能是某个节点的左子树也可能是右子</span></span><br><span class="line">树</span><br><span class="line">  <span class="keyword">if</span>(<span class="keyword">null</span> == pparent)</span><br><span class="line">    root = subR;</span><br><span class="line">  <span class="keyword">else</span>&#123;</span><br><span class="line">    <span class="keyword">if</span>(pparent.left == parent)</span><br><span class="line">      pparent.left = subR;</span><br><span class="line">    <span class="keyword">else</span></span><br><span class="line">      pparent.right = subR;</span><br><span class="line"> &#125;</span><br><span class="line">  <span class="comment">// 旋转完成后，parent和subR节点的平衡因子已经是0</span></span><br><span class="line">  parent.bf = subR.bf = <span class="number">0</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></li>
+</ul>
+<ol start="2">
+<li><strong>新节点插入较高右子树的右侧—右右：左单旋</strong><br><img src="https://img-blog.csdnimg.cn/20200222171740256.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L2xfMjU4MTE1NDE3Ng==,size_16,color_FFFFFF,t_70" alt="在这里插入图片描述"></li>
+<li><strong>新节点插入较高左子树的右侧—左右：先左单旋再右单旋</strong><br><img src="https://img-blog.csdnimg.cn/20200222172329265.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L2xfMjU4MTE1NDE3Ng==,size_16,color_FFFFFF,t_70" alt="在这里插入图片描述"></li>
+</ol>
+<strong>将双旋变成单旋后再旋转</strong>，即：先对30进行左单旋，然后再对90进行右单旋，旋转完成后再考虑平衡因子的更新。</li>
+</ol>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 先左单旋再右单旋</span></span><br><span class="line"><span class="comment">// 旋转之前，60的平衡因子可能是-1/0/1，旋转完成之后，根据情况对其他节点的平衡因子进行调整</span></span><br><span class="line"><span class="function"><span class="keyword">private</span> <span class="keyword">void</span> <span class="title">rotateLR</span><span class="params">(AVLTreeNode parent)</span></span>&#123;</span><br><span class="line">  AVLTreeNode subL = parent.left;</span><br><span class="line">  AVLTreeNode subLR = subL.right;</span><br><span class="line"> </span><br><span class="line">  <span class="comment">// 旋转之前，保存subLR的平衡因子，旋转完成之后，需要根据该平衡因子来调整其他节点的平衡因子</span></span><br><span class="line">  <span class="keyword">int</span> bf = subLR.bf;</span><br><span class="line">  rotateLeft(parent.left);</span><br><span class="line">  rotateRight(parent);</span><br><span class="line">  <span class="keyword">if</span>(<span class="number">1</span> == bf)</span><br><span class="line">    subL.bf = -<span class="number">1</span>;</span><br><span class="line">  <span class="keyword">else</span> <span class="keyword">if</span>(-<span class="number">1</span> == bf)</span><br><span class="line">    parent.bf = <span class="number">1</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<ol start="4">
+<li><strong>新节点插入较高右子树的左侧—右左：先右单旋再左单旋</strong><br><img src="https://img-blog.csdnimg.cn/2020022217324375.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L2xfMjU4MTE1NDE3Ng==,size_16,color_FFFFFF,t_70" alt="在这里插入图片描述"><br>新节点插入后，假设以pParent为根的子树不平衡，即pParent的平衡因子为2或者-2，分以下情况考虑</li>
+</ol>
+<ul>
+<li><p>pParent的平衡因子为2，说明pParent的右子树高，设pParent的右子      树的根为pSubR</p>
+<ul>
+<li>当pSubR的平衡因子为1时，执行左单旋</li>
+<li>当pSubR的平衡因子为-1时，执行右左双旋</li>
+</ul>
+</li>
+<li><p>pParent的平衡因子为-2，说明pParent的左子树高，设pParent的左子树的根为pSubL</p>
+<ul>
+<li>当pSubL的平衡因子为-1是，执行右单旋</li>
+<li>当pSubL的平衡因子为1时，执行左右双旋</li>
+</ul>
+<p><strong>即：pParent与其较高子树节点的平衡因子时同号时单旋转，异号时双旋转。</strong><br>旋转完成后，原pParent为根的子树个高度降低，已经平衡，不需要再向上更新。</p>
+<h4 id="AVL树性能分析"><a href="#AVL树性能分析" class="headerlink" title="AVL树性能分析"></a>AVL树性能分析</h4></li>
+</ul>
+<p><strong>AVL树是一棵绝对平衡的二叉搜索树，其要求每个节点的左右子树高度差的绝对值都不超过1，这样可以保证查询时高效的时间复杂度，即$log_2 (N)$。但是如果要对AVL树做一些结构修改的操作，性能非常低下，比如：插入时要维护其绝对平衡，旋转的次数比较多，更差的是在删除时，有可能一直要让旋转持续到根的位置。因此：如果需要一种查询高效且有序的数据结构，而且数据的个数为静态的(即不会改变)，可以考虑AVL树，但一个结构经常修改，就不太适合。</strong></p>
+
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
         
   
   
@@ -882,7 +1000,7 @@
       <div class="site-state-item site-state-posts">
           <a href="/archives/">
         
-          <span class="site-state-item-count">7</span>
+          <span class="site-state-item-count">8</span>
           <span class="site-state-item-name">posts</span>
         </a>
       </div>
@@ -923,13 +1041,13 @@
       <i class="fa fa-area-chart"></i>
     </span>
       <span class="post-meta-item-text">Symbols count total: </span>
-    <span title="Symbols count total">23k</span>
+    <span title="Symbols count total">27k</span>
     <span class="post-meta-divider">|</span>
     <span class="post-meta-item-icon">
       <i class="fa fa-coffee"></i>
     </span>
       <span class="post-meta-item-text">Reading time total &asymp;</span>
-    <span title="Reading time total">21 mins.</span>
+    <span title="Reading time total">24 mins.</span>
 </div>
   <div class="powered-by">Powered by <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> v4.0.0
   </div>
