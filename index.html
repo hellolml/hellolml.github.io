@@ -152,7 +152,7 @@
   </li>
         <li class="menu-item menu-item-archives">
 
-    <a href="/archives/" rel="section"><i class="fa fa-fw fa-archive"></i>归档<span class="badge">9</span></a>
+    <a href="/archives/" rel="section"><i class="fa fa-fw fa-archive"></i>归档<span class="badge">10</span></a>
 
   </li>
   </ul>
@@ -177,6 +177,117 @@
             
 
   <div class="posts-expand">
+        
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block home" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2020/03/24/%E5%B9%B6%E5%8F%91%E7%BC%96%E7%A8%8B-%E9%94%81/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="LMliao">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="welcome mingliao blog!">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          
+            <a href="/2020/03/24/%E5%B9%B6%E5%8F%91%E7%BC%96%E7%A8%8B-%E9%94%81/" class="post-title-link" itemprop="url">并发编程(锁)</a>
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+              
+
+              <time title="创建时间：2020-03-24 19:44:42 / 修改时间：19:46:54" itemprop="dateCreated datePublished" datetime="2020-03-24T19:44:42+08:00">2020-03-24</time>
+            </span>
+
+          <br>
+            <span class="post-meta-item" title="本文字数">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-file-word-o"></i>
+              </span>
+                <span class="post-meta-item-text">本文字数：</span>
+              <span>4.3k</span>
+            </span>
+            <span class="post-meta-item" title="阅读时长">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-clock-o"></i>
+              </span>
+                <span class="post-meta-item-text">阅读时长 &asymp;</span>
+              <span>4 分钟</span>
+            </span>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <p>@[toc]</p>
+<h2 id="乐观锁与悲观锁"><a href="#乐观锁与悲观锁" class="headerlink" title="乐观锁与悲观锁"></a>乐观锁与悲观锁</h2><p><strong>乐观锁</strong>:乐观锁采用乐观的思想处理数据,在每次读取数据时都认为别人不会修改该数据,所以不会上锁,但在更新时会判断在此期间别人有没有更新该数据,通常采用在写时先读出当前版本号然后加锁的方法.==具体过程为==:<strong>比较当前版本号与上一次的版本号,如版本号一致则更新,如果版本号不一致,则重复进行读,比较,写操作.</strong><br>     Java中的乐观锁大部分是通过CAS(Compare And Swap ,比较和交换)操作实现的,CAS后面介绍.<br><strong>悲观锁</strong>:悲观锁采用悲观思想处理数据,在每次读取数据时都会认为别人会修改数据,所以每次在读写数据时都会上锁,这样别人想读这个数据时这样被人想写这个数据时就会阻塞,等待直到拿到锁.<br>Java中的悲观锁大部分基于AQS(Abstract Queued Synchronized,抽象的队列同步器)架构实现,AQS后面介绍.<br> <strong>乐观锁的问题</strong>：并不总是能处理所有问题，所以会引入一定的系统复杂度.<br> <strong>悲观锁的问题</strong>：总是需要竞争锁，进而导致发生线程切换，挂起其他线程；所以性能不高</p>
+<h2 id="读写锁"><a href="#读写锁" class="headerlink" title="读写锁"></a>读写锁</h2><p> 多线程之间，数据的读取方之间不会产生线程安全问题，但==数据的写入方互相之间以及和读者之间都需要进行互斥==。如果两种场景下都用同一个锁，就会产生极大的性能损耗。所以读写锁因此而产生。<br> 读写锁（readers-writer lock），看英文可以顾名思义，在执行加锁操作时需要额外表明读写意图，复数读者之间并不互斥，而写者则要求与任何人互斥。</p>
+<h2 id="自旋锁（Spin-Lock）"><a href="#自旋锁（Spin-Lock）" class="headerlink" title="自旋锁（Spin Lock）"></a>自旋锁（Spin Lock）</h2><p>自旋锁认为:如果==持有锁的线程能在很短的时间内释放锁资源，那么那些等待竞争锁的线程就不需要做内核态和用户态之间的切换进人阻塞、挂起状态，只需等一等(也叫作自旋)，在等待持有锁的线程释放锁后即可立即获取锁==，这样就避免了用户线程在内核状态的切换上导致的锁时间消耗。<br>线程在自旋时会占用CPU,在线程长时间自旋获取不到锁时，将会产CPU的浪费，甚至有时线程永远无法获取锁而导致CPU资源被永久占用，所以需要设定一个自旋等待的最大时间。在线程执行的时间超过自旋等待的最大时间后，线程会退出自旋模式并释放其持有的锁。<br><strong>自旋锁的优缺点</strong>:</p>
+<ul>
+<li>优点:自旋锁可以减少CPU上下文的切换，对于占用锁的时间非常短或锁竞争不激烈的代码块来说性能大幅度提升，因为自旋的CPU耗时明显少于线程阻塞、挂起、再唤醒时两次CPU上下文切换所用的时间。</li>
+<li>缺点:在持有锁的线程占用锁时间过长或锁的竞争过于激烈时，线程在自旋过程中会长时间获取不到锁资源，将引起CPU的浪费。所以在系统中有复杂锁依赖的情况下不适合采用自旋锁。<h2 id="可重入锁"><a href="#可重入锁" class="headerlink" title="可重入锁"></a>可重入锁</h2>可重入锁的字面意思是“可以重新进入的锁”，即==允许同一个线程多次获取同一把锁==。比如一个递归函数里有加锁操作，递归过程中这个锁会阻塞自己吗？如果不会，那么这个锁就是可重入锁（因为这个原因可重入锁也叫做递归锁）。<br>Java里只要以Reentrant开头命名的锁都是可重入锁，而且JDK提供的所有现成的Lock实现类，包括synchronized<h2 id="CAS"><a href="#CAS" class="headerlink" title="CAS"></a>CAS</h2>CAS: 全称Compare and swap，字面意思:”比较并交换“，一个 CAS 涉及到以下操作：<blockquote>
+<p>我们假设内存中的原数据V，预期值E，需要修改的新值N。 </p>
+<ol>
+<li>比较 E 与 V 是否相等。（比较）</li>
+<li>如果比较相等，将 N写入 V。（交换）</li>
+<li>返回操作是否成功。</li>
+</ol>
+</blockquote>
+</li>
+</ul>
+<p>当多个线程同时对某个资源进行CAS操作，只能有一个线程操作成功，但是并不会阻塞其他线程,其他线程只会收到操作失败的信号。可见 CAS 其实是一个乐观锁。<br><strong>CAS实现自旋锁</strong></p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">SpinLock</span> </span>&#123;</span><br><span class="line"> <span class="keyword">private</span> AtomicReference&lt;Thread&gt; sign =<span class="keyword">new</span> AtomicReference&lt;&gt;();</span><br><span class="line">  <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">lock</span><span class="params">()</span></span>&#123;</span><br><span class="line">   Thread current = Thread.currentThread();</span><br><span class="line">   <span class="comment">// 不放弃 CPU，一直在这里旋转判断</span></span><br><span class="line">   <span class="keyword">while</span>(!sign .compareAndSet(<span class="keyword">null</span>, current))&#123;</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br><span class="line"> <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">unlock</span> <span class="params">()</span></span>&#123;</span><br><span class="line">   Thread current = Thread.currentThread();</span><br><span class="line">   sign.compareAndSet(current, <span class="keyword">null</span>);</span><br><span class="line">&#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p><strong>ABA问题</strong><br>对CAS算法的实现有一个重要的前提:需要取出内存中某时刻的数据，然后在下一时刻进行比较、替换，在这个时间差内可能数据已经发生了变化，导致产生ABA问题。<br>ABA问题指第<strong>1个线程从内存的V位置取出A,这时第2个线程也从内存中取出A,并将V位置的数据首先修改为B，接着第3个线程取出B,又将v位置的数据修改为A,这时第1个线程在进行CAS操作时会发现在内存中仍然是A,然后第1个线程操作成功</strong>。尽管从第1个线程的角度来说，CAS操作是成功的，但在该过程中其实V位置的数据发生了变化，只是第1个线程没有感知到罢了，这在某些应用场景下可能出现过程数据不一致的问题。<br> 部分乐观锁是==通过版本号(version) 来解决ABA问题==的，具体的操作是乐观锁每次在执行数据的修改操作时都会带上一个版本号,在预期的版本号和数据的版本号一致时就可以执行修改操作，并对版本号执行加1操作，否则执行失败。因为每次操作的版本号都会随之增加，所以不会出现ABA问题，因为版本号只会增加，不会减少。</p>
+<h2 id="AQS"><a href="#AQS" class="headerlink" title="AQS"></a>AQS</h2><p> AQS ( Asbstract Queued Synchronizer) 是一个抽象的队列同步器，通过维护一个共享资源状态( Volatile Int State) 和一个先进先出( FIFO)的线程等待队列来实现一个多线程访问共享资源的同步框架。<br><strong>AQS的原理</strong><br>AQS为每个共享资源都设置一个共享资源锁， 线程在需要访问共享资源时首先需要获取共享资源锁，如果获取到了共享资源锁，便可以在当前线程中使用该共享资源，如果获取不到，则将该线程放人线程等待队列，等待下-次资源调度， 具体的流程如下图所示。许多同步类的实现都依赖于AQS,例如常用的ReentrantLock 、Semaphore 和CountDownLatch。<br><img src="https://img-blog.csdnimg.cn/20200323180736214.png" alt="在这里插入图片描述"></p>
+<blockquote>
+<p>Abstract Queued Synchronizer维护了一个volatile int 类型的变量，用于表示当前的同步状态。<br>Volatile虽然不能保证操作的原子性，但是能保证当前变量state的可见性。state的访问方式有三种:getState()、 setState()和compareAndSetState(), 均是原子操作，其中，compareAndSetState的实现依赖于Unsafe 的compareAndSwapInt()。 具体的JDK代码实现如下:</p>
+</blockquote>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//返回共享资源状态,此操作的内存语义为volatile修饰的原子读操作</span></span><br><span class="line"><span class="function"><span class="keyword">protected</span> <span class="keyword">final</span> <span class="keyword">int</span> <span class="title">getState</span><span class="params">()</span></span>&#123;</span><br><span class="line">        <span class="keyword">return</span> state;</span><br><span class="line">    &#125;</span><br><span class="line"><span class="comment">//设置共享资源状态,此操作语义内存为volatile修饰的原子性写操作    </span></span><br><span class="line">    <span class="function"><span class="keyword">protected</span> <span class="keyword">final</span> <span class="keyword">void</span> <span class="title">setState</span><span class="params">(<span class="keyword">int</span> newState)</span></span>&#123;</span><br><span class="line">        state = newState;</span><br><span class="line">    &#125;</span><br><span class="line"><span class="comment">//自动将同步状态设置为给定的更新状态值(如果当前状态值等于预期值).</span></span><br><span class="line"><span class="comment">//此操作的内存语义为volatile修饰的原子读写操作</span></span><br><span class="line">    <span class="function"><span class="keyword">protected</span> <span class="keyword">final</span> <span class="keyword">boolean</span> <span class="title">compareAndSetState</span><span class="params">(<span class="keyword">int</span> expect,<span class="keyword">int</span> update)</span></span>&#123;</span><br><span class="line">        <span class="keyword">return</span> unsafe.compareAndSwapInt(<span class="keyword">this</span>,stateoffset,expect,update);</span><br><span class="line">    &#125;</span><br></pre></td></tr></table></figure>
+
+<h2 id="synchronized"><a href="#synchronized" class="headerlink" title="synchronized"></a>synchronized</h2><p>synchronized关键字用于为Java 对象、方法、代码块提供线程安全的操作。synchronized属于独占式的悲观锁，同时属于可重入锁。<strong>在使用synchronized修饰对象时，同一时刻只能有一个线程对该对象进行访问;在synchronized 修饰方法、代码块时，同一时刻只能有一个线程执行该方法体或代码块，其他线程只有等待当前线程执行完毕并释放锁资源后才能访问该对象或执行同步代码块</strong>。<br>Java中的每个对象都有个monitor 对象，加锁就是在竞争monitor对象. 对代码块加锁是通过在前后分别加上monitorenter 和monitorexit 指令实现的，对方法是否加锁是通过一个标记位来判断的。<br><strong>JVM 将 synchronized 锁分为 无锁、偏向锁、轻量级锁、重量级锁 状态。会根据情况，进行依次升级</strong>。<br><strong>无锁</strong>：没有对资源进行锁定，所有的线程都能访问并修改同一个资源，但同时只有一个线程能修改成功，其他修改失败的线程会不断重试直到修改成功。</p>
+<ul>
+<li><strong>偏向锁</strong>：对象的代码一直被同一线程执行，不存在多个线程争，该线程在后续的执行中自动获取锁，降低获取锁带来的性能开销。偏向锁，指的就是偏向第一个加锁线程，该线程是不会主动释放偏向锁的，只有当其他线程尝试竞争偏向锁才会被释放。偏向锁的撤销，需要在某个时间点上没有字节码正在执行时，先暂停拥有偏向锁的线程，然后判断锁对象是否处于被锁定状态。如果线程不处于活动状态，则将对象头设置成无锁状态，并撤销偏向锁；如果线程处于活动状态，升级为轻量级锁的状态。</li>
+<li><strong>轻量级锁</strong>：轻量级锁是指当锁是偏向锁的时候，被第二个线程 B 所访问，此时偏向锁就会升级为轻量级锁，线程 B会通过自旋的形式尝试获取锁，线程不会阻塞，从而提高性能。当前只有一个等待线程，则该线程将通过自旋进行等待。但是当自旋超过一定的次数时，轻量级锁便会升级为重量级锁；当一个线程已持有锁，另一个线程在自旋，而此时又有第三个线程来访时，轻量级锁也会升级为重量级锁。</li>
+<li><strong>重量级锁</strong>：指当有一个线程获取锁之后，其余所有等待获取该锁的线程都会处于阻塞状态。<br>重量级锁通过对象内部的监视器（monitor）实现，而其中 monitor 的本质是依赖于底层操作系统的 Mutex Lock实现，操作系统实现线程之间的切换需要从用户态切换到内核态，切换成本非常高。</li>
+</ul>
+<p><strong>synchronized 的作用范围</strong><br>synchronized的作用范围如下。</p>
+<ul>
+<li>synchronized 作用于成员变量和非静态方法时，锁住的是对象的实例，即this对象。<ul>
+<li>synchronized 作用于静态方法时，锁住的是Class 实例，因为静态方法属于Class而不属于对象。</li>
+</ul>
+</li>
+<li>synchronized 作用于-个代码块时， 锁住的是所有代码块中配置的对象</li>
+</ul>
+
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
         
   
   
@@ -1128,7 +1239,7 @@
       <div class="site-state-item site-state-posts">
           <a href="/archives/">
         
-          <span class="site-state-item-count">9</span>
+          <span class="site-state-item-count">10</span>
           <span class="site-state-item-name">日志</span>
         </a>
       </div>
@@ -1169,13 +1280,13 @@
       <i class="fa fa-area-chart"></i>
     </span>
       <span class="post-meta-item-text">站点总字数：</span>
-    <span title="站点总字数">31k</span>
+    <span title="站点总字数">35k</span>
     <span class="post-meta-divider">|</span>
     <span class="post-meta-item-icon">
       <i class="fa fa-coffee"></i>
     </span>
       <span class="post-meta-item-text">站点阅读时长 &asymp;</span>
-    <span title="站点阅读时长">28 分钟</span>
+    <span title="站点阅读时长">32 分钟</span>
 </div>
   <div class="powered-by">由 <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> 强力驱动 v4.0.0
   </div>
